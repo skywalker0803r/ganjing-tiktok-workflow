@@ -1,0 +1,54 @@
+2026-09-02 06:29:50,466 - ganjing_pipeline - INFO - ============================================================
+2026-09-02 06:29:50,466 - ganjing_pipeline - INFO - Starting Database Module Tests
+2026-09-02 06:29:50,466 - ganjing_pipeline - INFO - ============================================================
+2026-09-02 06:29:50,486 - ganjing_pipeline - INFO - ✓ Database initialized at /workspaces/ganjing-tiktok-workflow/data/pipeline.db
+2026-09-02 06:29:50,486 - ganjing_pipeline - INFO - 
+📝 Test 1: Adding Videos
+2026-09-02 06:29:50,489 - ganjing_pipeline - INFO -   ✓ Added: 政治分析 - 2024年趨勢 (ID: 1)
+2026-09-02 06:29:50,495 - ganjing_pipeline - INFO -   ✓ Added: 經濟見聞 - 新興市場 (ID: 2)
+2026-09-02 06:29:50,499 - ganjing_pipeline - INFO -   ✓ Added: 社會觀察 - 文化差異 (ID: 3)
+2026-09-02 06:29:50,499 - ganjing_pipeline - INFO - 
+🔍 Test 2: Retrieving Videos by Ganjing ID
+2026-09-02 06:29:50,499 - ganjing_pipeline - INFO -   ✓ Found video: 政治分析 - 2024年趨勢
+2026-09-02 06:29:50,499 - ganjing_pipeline - INFO -     Status: pending
+2026-09-02 06:29:50,499 - ganjing_pipeline - INFO - 
+📊 Test 3: Updating Video Status
+2026-09-02 06:29:50,506 - ganjing_pipeline - INFO -   ✓ Video 1 marked as downloaded
+2026-09-02 06:29:50,510 - ganjing_pipeline - INFO -   ✓ Video 2 marked as downloaded
+2026-09-02 06:29:50,510 - ganjing_pipeline - INFO - 
+📋 Test 4: Retrieving Videos by Status
+2026-09-02 06:29:50,510 - ganjing_pipeline - INFO -   ✓ Found 2 downloaded videos
+2026-09-02 06:29:50,510 - ganjing_pipeline - INFO -     - 政治分析 - 2024年趨勢 (Status: downloaded)
+2026-09-02 06:29:50,510 - ganjing_pipeline - INFO -     - 經濟見聞 - 新興市場 (Status: downloaded)
+2026-09-02 06:29:50,511 - ganjing_pipeline - INFO -   ✓ Found 1 pending videos
+2026-09-02 06:29:50,511 - ganjing_pipeline - INFO -     - 社會觀察 - 文化差異 (Status: pending)
+2026-09-02 06:29:50,511 - ganjing_pipeline - INFO - 
+📝 Test 5: Logging Processing Steps
+2026-09-02 06:29:50,515 - ganjing_pipeline - INFO -   ✓ Logged download step for video 1
+2026-09-02 06:29:50,520 - ganjing_pipeline - INFO -   ✓ Logged processing step for video 1
+2026-09-02 06:29:50,520 - ganjing_pipeline - INFO - 
+📖 Test 6: Retrieving Processing Logs
+2026-09-02 06:29:50,520 - ganjing_pipeline - INFO -   ✓ Found 2 processing logs for video 1
+2026-09-02 06:29:50,520 - ganjing_pipeline - INFO -     - [download] Successfully downloaded video (success)
+2026-09-02 06:29:50,520 - ganjing_pipeline - INFO -     - [process] Converting format to 9:16 (success)
+2026-09-02 06:29:50,520 - ganjing_pipeline - INFO - 
+🎯 Test 7: Updating TikTok URL
+2026-09-02 06:29:50,526 - ganjing_pipeline - INFO -   ✓ TikTok URL updated for video 1
+2026-09-02 06:29:50,526 - ganjing_pipeline - INFO - 
+📈 Test 8: Pipeline Statistics
+2026-09-02 06:29:50,527 - ganjing_pipeline - INFO -   Total videos: 3
+2026-09-02 06:29:50,527 - ganjing_pipeline - INFO -   Pending: 1
+2026-09-02 06:29:50,527 - ganjing_pipeline - INFO -   Downloaded: 2
+2026-09-02 06:29:50,527 - ganjing_pipeline - INFO -   Processed: 0
+2026-09-02 06:29:50,527 - ganjing_pipeline - INFO -   Uploaded: 0
+2026-09-02 06:29:50,527 - ganjing_pipeline - INFO -   Uploaded today: 0
+2026-09-02 06:29:50,527 - ganjing_pipeline - INFO - 
+⚠️  Test 9: Error Handling (Duplicate Video)
+2026-09-02 06:29:50,528 - ganjing_pipeline - INFO -   ✓ Duplicate video correctly rejected
+2026-09-02 06:29:50,528 - ganjing_pipeline - INFO - 
+❌ Test 10: Marking Video as Failed
+2026-09-02 06:29:50,533 - ganjing_pipeline - INFO -   ✓ Video 1 marked as failed with error message
+2026-09-02 06:29:50,533 - ganjing_pipeline - INFO - 
+============================================================
+2026-09-02 06:29:50,533 - ganjing_pipeline - INFO - ✅ All Database Tests Completed Successfully!
+2026-09-02 06:29:50,533 - ganjing_pipeline - INFO - ============================================================
