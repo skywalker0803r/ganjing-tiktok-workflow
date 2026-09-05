@@ -108,7 +108,7 @@ class PipelineScheduler:
             self.sleeper(poll_interval)
 
 
-def main() -> None:
+def main() -> int:
     """Run the pipeline once or keep the scheduler alive."""
     parser = argparse.ArgumentParser(description="Ganjing to TikTok pipeline")
     parser.add_argument("--once", action="store_true", help="Run all enabled stages once")
@@ -119,10 +119,12 @@ def main() -> None:
     features = {"dry_run_mode": args.dry_run} if args.dry_run else None
     runner = PipelineRunner(features=features)
     if args.once:
-        runner.run_once()
-    else:
-        PipelineScheduler(runner).run_forever()
+        summary = runner.run_once()
+        return 1 if summary["errors"] else 0
+
+    PipelineScheduler(runner).run_forever()
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

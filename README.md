@@ -7,8 +7,8 @@
 ## 🏗️ 系統架構
 
 ```
-Ganjing World Channel → Download → Video Processing → AI Content Generation → TikTok Upload
-       (yt-dlp)          (MP4)      (FFmpeg, 9:16)     (GPT-4o-mini)         (Playwright)
+Ganjing World Source → Download → Video Processing → AI Content Generation → TikTok Upload
+ (Playwright, HTTP)      (MP4)      (FFmpeg, 9:16)     (GPT-4o-mini)         (Playwright)
 ```
 
 ## 📦 項目結構
@@ -52,7 +52,7 @@ ganjing-tiktok-workflow/
 - [x] 單元測試通過
 
 ### Milestone 2: 影片監控與下載模組 ✅ 完成
-- [x] yt-dlp 集成
+- [x] Playwright 公開影片來源解析
 - [x] 頻道監控邏輯
 - [x] 自動下載功能
 - [x] 重複檢查機制
@@ -86,6 +86,7 @@ ganjing-tiktok-workflow/
 ### 安裝依賴
 ```bash
 pip install -r requirements.txt
+python3 -m playwright install chromium
 ```
 
 ### 運行資料庫測試
@@ -132,19 +133,26 @@ python3 src/main.py --once --dry-run
 
 ## ⚙️ 配置
 
-編輯 `src/config.py` 設置以下參數：
+設定以下環境變數與參數：
 
 - `GANJING_CHANNEL_URL`: 乾淨世界頻道 URL
 - `OPENAI_API_KEY`: OpenAI API 密鑰
 - `TIKTOK_UPLOAD`: TikTok 上傳配置
 - `NOTIFICATION`: 通知設置 (Telegram/LINE)
 
+```bash
+export GANJING_CHANNEL_URL="https://ganjingworld.com/channel/你的頻道"
+export OPENAI_API_KEY="你的金鑰"
+```
+
+下載器透過瀏覽器讀取 `GANJING_CHANNEL_URL` 頁面中連向 `/video/` 的公開影片頁，並下載其公開、無 DRM 的 MP4 媒體 URL。來源頁的影片連結與播放器 selector 可在 `GANJING_DOWNLOAD` 調整。僅處理你有權下載、轉製及發布的內容；不會繞過登入、付費牆、CAPTCHA 或 DRM。
+
 ## 📝 技術棧
 
 | 模組 | 技術 | 用途 |
 |------|------|------|
 | 核心語言 | Python 3.10+ | 主要邏輯編寫與排程控管 |
-| 影片下載 | yt-dlp | 解析乾淨世界頻道與高畫質影片下載 |
+| 影片下載 | Playwright/requests | 讀取公開影片頁並串流下載 MP4 |
 | 影片處理 | FFmpeg/moviepy | 轉碼、轉 9:16 豎屏、背景模糊襯底 |
 | 文案生成 | OpenAI API | 自動生成爆款標題與相關 Hashtags |
 | 自動上傳 | Playwright | 模擬真實瀏覽器上傳至 TikTok |

@@ -19,6 +19,11 @@ class FakeDownloader:
         return ["new-video"]
 
 
+class FailingDownloader:
+    def scan_and_download(self):
+        raise RuntimeError("source unavailable")
+
+
 class FakeProcessor:
     def __init__(self):
         self.calls = 0
@@ -84,6 +89,14 @@ class PipelineRunnerTests(unittest.TestCase):
         self.assertEqual(summary["uploaded"], [])
         self.assertEqual(self.uploader.calls, 0)
         self.assertEqual(self.generator.calls, [(7, "Original title")])
+
+    def test_stage_failure_is_included_in_summary(self):
+        runner = PipelineRunner(FailingDownloader(), self.processor, self.generator, self.uploader)
+
+        summary = runner.run_once()
+
+        self.assertEqual(summary["downloaded"], [])
+        self.assertEqual(summary["errors"], {"download": "source unavailable"})
 
 
 class PipelineSchedulerTests(unittest.TestCase):

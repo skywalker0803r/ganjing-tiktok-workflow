@@ -29,9 +29,14 @@ os.makedirs(RAW_VIDEO_DIR, exist_ok=True)
 os.makedirs(PROCESSED_VIDEO_DIR, exist_ok=True)
 
 # Ganjing World Configuration
-GANJING_CHANNEL_URL = "https://ganjingworld.com/channel/..."  # Replace with actual channel
+GANJING_CHANNEL_URL = os.getenv('GANJING_CHANNEL_URL', '')
 GANJING_VIDEO_MIN_LENGTH = 10  # seconds
 GANJING_VIDEO_MAX_LENGTH = 600  # 10 minutes - videos longer than this will be skipped
+GANJING_DOWNLOAD = {
+    'headless': True,
+    'video_link_selector': 'a[href*="/video/"]',
+    'video_selector': 'video',
+}
 
 # TikTok Video Configuration
 TIKTOK_TARGET_RESOLUTION = (1080, 1920)  # 9:16 portrait

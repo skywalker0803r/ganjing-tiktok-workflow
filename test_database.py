@@ -4,12 +4,13 @@ Test script for database module
 
 import sys
 import os
+import tempfile
 
 # Add src directory to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 from database import DatabaseManager
-from config import DATABASE_PATH, setup_logging
+from config import setup_logging
 import logging
 
 # Setup logging
@@ -23,9 +24,11 @@ def test_database():
     logger.info("Starting Database Module Tests")
     logger.info("=" * 60)
     
-    # Initialize database
-    db = DatabaseManager(DATABASE_PATH)
-    logger.info(f"✓ Database initialized at {DATABASE_PATH}")
+    # Initialize an isolated database so test records never affect pipeline data.
+    temporary_directory = tempfile.TemporaryDirectory()
+    database_path = os.path.join(temporary_directory.name, 'pipeline.db')
+    db = DatabaseManager(database_path)
+    logger.info(f"✓ Database initialized at {database_path}")
     
     # Test 1: Add videos
     logger.info("\n📝 Test 1: Adding Videos")
@@ -130,6 +133,7 @@ def test_database():
     logger.info("\n" + "=" * 60)
     logger.info("✅ All Database Tests Completed Successfully!")
     logger.info("=" * 60)
+    temporary_directory.cleanup()
 
 
 if __name__ == '__main__':
