@@ -80,6 +80,14 @@ TIKTOK_UPLOAD = {
     'auto_schedule': True,
     'scheduled_times': ['12:00', '18:00'],  # Upload at these times daily
     'enable_cookies_persistence': True,
+    'session_data_dir': os.path.join(DATA_DIR, 'tiktok-session'),
+    'headless': False,
+    'selectors': {
+        'file_input': 'input[type="file"]',
+        'description': '[contenteditable="true"]',
+        'post_button': 'button:has-text("Post")',
+        'captcha': 'iframe[src*="captcha"], [class*="captcha"]',
+    },
 }
 
 # Proxy Configuration (for IP rotation)

@@ -22,7 +22,7 @@ ganjing-tiktok-workflow/
 │   ├── downloader.py             # 影片下載模組 ✅
 │   ├── video_processor.py        # 影片處理模組 ✅
 │   ├── content_generator.py      # 文案生成模組 ✅
-│   ├── uploader.py               # 自動發布模組
+│   ├── uploader.py               # 自動發布模組 ✅
 │   └── main.py                   # 主控程序
 ├── temp/
 │   ├── raw/                      # 原始下載影片
@@ -35,6 +35,7 @@ ganjing-tiktok-workflow/
 ├── test_downloader.py            # 下載器測試 ✅
 ├── test_video_processor.py       # 影片處理測試 ✅
 ├── test_content_generator.py     # 文案生成測試 ✅
+├── test_uploader.py              # TikTok 上傳器測試 ✅
 ├── requirements.txt              # Python 依賴
 └── README.md
 
@@ -68,10 +69,11 @@ ganjing-tiktok-workflow/
 - [x] Hashtag 生成
 - [x] 文案保存、失敗紀錄與資料庫遷移
 
-### Milestone 5: TikTok 自動發布模組 ⏳ 待開發
-- [ ] Playwright 集成
-- [ ] Session 管理
-- [ ] 自動發布邏輯
+### Milestone 5: TikTok 自動發布模組 ✅ 完成
+- [x] Playwright 集成
+- [x] 持久化 Session 管理
+- [x] 自動發布邏輯
+- [x] 每日發布上限與 CAPTCHA 偵測暫停
 
 ### Milestone 6: 排程與主控模組 ⏳ 待開發
 - [ ] 定時任務排程
@@ -103,6 +105,11 @@ python3 -m unittest -v test_video_processor.py
 ### 運行文案生成器測試
 ```bash
 python3 -m unittest -v test_content_generator.py
+```
+
+### 運行 TikTok 上傳器測試
+```bash
+python3 -m unittest -v test_uploader.py
 ```
 
 ## ⚙️ 配置
