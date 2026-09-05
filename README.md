@@ -19,7 +19,7 @@ ganjing-tiktok-workflow/
 │   ├── __init__.py
 │   ├── config.py                 # 配置文件
 │   ├── database.py               # 資料庫模組 ✅
-│   ├── downloader.py             # 影片下載模組
+│   ├── downloader.py             # 影片下載模組 ✅
 │   ├── video_processor.py        # 影片處理模組
 │   ├── content_generator.py      # 文案生成模組
 │   ├── uploader.py               # 自動發布模組
@@ -32,6 +32,7 @@ ganjing-tiktok-workflow/
 ├── logs/                         # 執行日誌
 ├── config/                       # 配置文件目錄
 ├── test_database.py              # 資料庫測試 ✅
+├── test_downloader.py            # 下載器測試 ✅
 ├── requirements.txt              # Python 依賴
 └── README.md
 
@@ -46,11 +47,12 @@ ganjing-tiktok-workflow/
 - [x] 統計查詢功能
 - [x] 單元測試通過
 
-### Milestone 2: 影片監控與下載模組 ⏳ 待開發
-- [ ] yt-dlp 集成
-- [ ] 頻道監控邏輯
-- [ ] 自動下載功能
-- [ ] 重複檢查機制
+### Milestone 2: 影片監控與下載模組 ✅ 完成
+- [x] yt-dlp 集成
+- [x] 頻道監控邏輯
+- [x] 自動下載功能
+- [x] 重複檢查機制
+- [x] 影片時長篩選與下載失敗紀錄
 
 ### Milestone 3: 自動剪輯與格式轉化模組 ⏳ 待開發
 - [ ] FFmpeg 集成
@@ -82,6 +84,11 @@ pip install -r requirements.txt
 ### 運行資料庫測試
 ```bash
 python3 test_database.py
+```
+
+### 運行下載器測試
+```bash
+python3 -m unittest -v test_downloader.py
 ```
 
 ## ⚙️ 配置
