@@ -50,6 +50,8 @@ class DatabaseManager:
                 content_generated_at TIMESTAMP,
                 uploaded_at TIMESTAMP,
                 tiktok_url TEXT,
+                tiktok_title TEXT,
+                tiktok_hashtags TEXT,
                 error_message TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -68,6 +70,9 @@ class DatabaseManager:
                 FOREIGN KEY (video_id) REFERENCES videos(id)
             )
         ''')
+
+        self._ensure_column(cursor, 'videos', 'tiktok_title', 'TEXT')
+        self._ensure_column(cursor, 'videos', 'tiktok_hashtags', 'TEXT')
         
         # Create index for faster lookups
         cursor.execute('''
@@ -248,6 +253,26 @@ class DatabaseManager:
             return False
         finally:
             conn.close()
+
+    def update_generated_content(self, video_id: int, title: str, hashtags: str) -> bool:
+        """Save generated TikTok copy and mark the video ready for upload."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+
+        try:
+            cursor.execute('''
+                UPDATE videos
+                SET tiktok_title = ?, tiktok_hashtags = ?, status = ?,
+                    content_generated_at = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            ''', (title, hashtags, 'content_generated', datetime.now(), video_id))
+            conn.commit()
+            return cursor.rowcount == 1
+        except Exception as e:
+            logger.error(f"Failed to save generated content for video {video_id}: {e}")
+            return False
+        finally:
+            conn.close()
     
     def log_processing_step(self, video_id: int, stage: str, 
                            message: str, status: str = 'success') -> bool:
@@ -334,6 +359,14 @@ class DatabaseManager:
         
         conn.close()
         return stats
+
+    @staticmethod
+    def _ensure_column(cursor, table: str, column: str, definition: str):
+        """Add a column when opening databases created by earlier versions."""
+        cursor.execute(f'PRAGMA table_info({table})')
+        columns = {row[1] for row in cursor.fetchall()}
+        if column not in columns:
+            cursor.execute(f'ALTER TABLE {table} ADD COLUMN {column} {definition}')
     
     @staticmethod
     def _row_to_dict(row: Tuple, description) -> dict:
