@@ -49,7 +49,8 @@ class VideoDownloader:
                 video_urls = page.locator(self.source_config["video_link_selector"]).evaluate_all(
                     "links => [...new Set(links.map(link => link.href))]"
                 )
-                return [self._read_video_page(page, video_url) for video_url in video_urls]
+                valid_video_urls = [video_url for video_url in video_urls if self._is_video_page_url(video_url)]
+                return [self._read_video_page(page, video_url) for video_url in valid_video_urls]
             finally:
                 browser.close()
 
@@ -71,6 +72,14 @@ class VideoDownloader:
     def _video_id(video_url: str) -> str:
         path_part = urlparse(video_url).path.rstrip("/").split("/")[-1]
         return path_part or hashlib.sha256(video_url.encode("utf-8")).hexdigest()[:16]
+
+    @classmethod
+    def _is_video_page_url(cls, video_url: str) -> bool:
+        """Reject placeholder links emitted while the source page is rendering."""
+        parsed_url = urlparse(video_url)
+        return parsed_url.scheme in {"http", "https"} and cls._video_id(video_url).lower() not in {
+            "undefined", "null"
+        }
 
     def is_eligible(self, video: Dict[str, Any]) -> bool:
         """Check whether a video includes required metadata and duration."""

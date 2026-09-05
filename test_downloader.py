@@ -73,6 +73,11 @@ class VideoDownloaderTests(unittest.TestCase):
 
         self.assertEqual(self.downloader.scan_and_download(), [])
 
+    def test_placeholder_video_url_is_rejected(self):
+        self.assertFalse(VideoDownloader._is_video_page_url("https://example.com/video/undefined"))
+        self.assertFalse(VideoDownloader._is_video_page_url("https://example.com/video/null"))
+        self.assertTrue(VideoDownloader._is_video_page_url("https://example.com/video/abc123"))
+
     @staticmethod
     def _video(video_id, duration=60):
         return {

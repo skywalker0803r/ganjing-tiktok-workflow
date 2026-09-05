@@ -62,54 +62,84 @@ ganjing-tiktok-workflow/
 - [x] FFmpeg 集成
 - [x] 9:16 豎屏轉換
 - [x] 背景模糊襯底
-- [x] 轉檔失敗紀錄與狀態追蹤
+## 🚀 使用方式
 
-### Milestone 4: 文案與標籤自動生成模組 ✅ 完成
+### 1. 安裝環境
+
+需要 Python 3.10+、FFmpeg，以及可執行 Chromium 的 Linux 環境。進入專案根目錄後執行：
+
 - [x] OpenAI API 集成
-- [x] 標題生成
+python3 -m pip install -r requirements.txt
 - [x] Hashtag 生成
+python3 -m playwright install-deps chromium
 - [x] 文案保存、失敗紀錄與資料庫遷移
 
-### Milestone 5: TikTok 自動發布模組 ✅ 完成
+若目前使用者沒有安裝系統套件的權限，請由容器管理員執行最後一行。`install-deps` 只需在環境初始化時執行一次。
+
+### 2. 建立設定檔
+
+```bash
+cp .env.example .env
+```
+
+編輯 `.env`，至少填入：
+
+```dotenv
+GANJING_CHANNEL_URL=https://ganjingworld.com/你的公開頻道或標籤頁
+OPENAI_API_KEY=你的_OpenAI_API_key
+```
+
+`.env` 只保留在本機，請勿提交或貼到公開訊息中。程式會在啟動時自動讀取專案根目錄的 `.env`；也可以改用同名 shell 環境變數。
+
+### 3. 執行測試
+
+執行完整測試套件：
+
+```bash
+python3 -m unittest -v
+```
+
+也可以單獨測試各模組：
+
+```bash
 - [x] Playwright 集成
-- [x] 持久化 Session 管理
-- [x] 自動發布邏輯
-- [x] 每日發布上限與 CAPTCHA 偵測暫停
-
 ### Milestone 6: 排程與主控模組 ✅ 完成
-- [x] 定時任務排程
-- [x] 工作流程整合
-- [x] 執行摘要與錯誤日誌
-
 ## 🚀 快速開始
-
-### 安裝依賴
-```bash
-pip install -r requirements.txt
 python3 -m playwright install chromium
-```
-
-### 運行資料庫測試
-```bash
 python3 test_database.py
-```
-
-### 運行下載器測試
-```bash
 python3 -m unittest -v test_downloader.py
 ```
 
-### 運行影片處理器測試
+### 4. 執行工作流程
+
+先用 dry-run 確認下載、轉檔與文案生成流程。dry-run 不會發布到 TikTok，但仍可能呼叫 OpenAI API：
+
 ```bash
-python3 -m unittest -v test_video_processor.py
+python3 src/main.py --once --dry-run
 ```
 
-### 運行文案生成器測試
+確認結果後，執行一次完整流程：
+
 ```bash
-python3 -m unittest -v test_content_generator.py
+python3 src/main.py --once
 ```
 
-### 運行 TikTok 上傳器測試
+首次上傳時，TikTok 瀏覽器會以非 headless 模式開啟，請依畫面完成登入與必要的人機驗證。Session 會保存於 `data/tiktok-session/`，後續執行會重用登入狀態。
+
+不帶 `--once` 時，程式會持續執行，並依 `src/config.py` 中 `TIKTOK_UPLOAD['scheduled_times']` 的時間排程：
+
+```bash
+python3 src/main.py
+```
+
+### 5. 查看結果
+
+- 原始下載影片：`temp/raw/`
+- 直式處理影片：`temp/processed/`
+- SQLite 狀態資料庫：`data/pipeline.db`
+- 執行日誌：`logs/`
+
+影片下載、處理、文案生成與上傳狀態都會寫入資料庫，已處理過的影片不會重複下載。
 ```bash
 python3 -m unittest -v test_uploader.py
 ```
@@ -141,9 +171,11 @@ python3 src/main.py --once --dry-run
 - `NOTIFICATION`: 通知設置 (Telegram/LINE)
 
 ```bash
-export GANJING_CHANNEL_URL="https://ganjingworld.com/channel/你的頻道"
-export OPENAI_API_KEY="你的金鑰"
+cp .env.example .env
+# 編輯 .env，填入你的頻道 URL 與 API 金鑰
 ```
+
+程式啟動時會自動讀取專案根目錄的 `.env`。若不使用 `.env`，也可以直接設定同名的 shell 環境變數。
 
 下載器透過瀏覽器讀取 `GANJING_CHANNEL_URL` 頁面中連向 `/video/` 的公開影片頁，並下載其公開、無 DRM 的 MP4 媒體 URL。來源頁的影片連結與播放器 selector 可在 `GANJING_DOWNLOAD` 調整。僅處理你有權下載、轉製及發布的內容；不會繞過登入、付費牆、CAPTCHA 或 DRM。
 
@@ -168,8 +200,16 @@ export OPENAI_API_KEY="你的金鑰"
 
 遇到問題請檢查：
 - 日誌文件: `logs/` 目錄
-- 資料庫狀態: `python3 test_database.py`
-- 配置設置: `src/config.py`
+- 資料庫狀態: `python3 -m unittest -v test_database.py`
+- 環境設定: `.env` 是否存在且包含 `GANJING_CHANNEL_URL`
+- Playwright 瀏覽器: `python3 -m playwright install chromium`
+
+常見錯誤：
+
+- `GANJING_CHANNEL_URL is not configured`: 建立 `.env` 並填入公開來源頁 URL。
+- `Executable doesn't exist`: 執行 `python3 -m playwright install chromium`。
+- `libatk-1.0.so.0` 或其他共享函式庫缺失：執行 `python3 -m playwright install-deps chromium`。
+- `No public video player found`: 確認來源頁包含可公開播放、且你有權下載與發布的影片。
 
 ---
 

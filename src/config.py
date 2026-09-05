@@ -5,6 +5,8 @@ Configuration file for Ganjing to TikTok Pipeline
 import os
 from datetime import datetime
 
+from dotenv import load_dotenv
+
 # Project paths
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC_DIR = os.path.join(PROJECT_ROOT, 'src')
@@ -12,6 +14,8 @@ DATA_DIR = os.path.join(PROJECT_ROOT, 'data')
 TEMP_DIR = os.path.join(PROJECT_ROOT, 'temp')
 LOGS_DIR = os.path.join(PROJECT_ROOT, 'logs')
 CONFIG_DIR = os.path.join(PROJECT_ROOT, 'config')
+
+load_dotenv(os.path.join(PROJECT_ROOT, '.env'))
 
 # Create directories if they don't exist
 os.makedirs(DATA_DIR, exist_ok=True)
