@@ -23,7 +23,7 @@ ganjing-tiktok-workflow/
 │   ├── video_processor.py        # 影片處理模組 ✅
 │   ├── content_generator.py      # 文案生成模組 ✅
 │   ├── uploader.py               # 自動發布模組 ✅
-│   └── main.py                   # 主控程序
+│   └── main.py                   # 主控與排程程序 ✅
 ├── temp/
 │   ├── raw/                      # 原始下載影片
 │   └── processed/                # 已處理影片
@@ -36,6 +36,7 @@ ganjing-tiktok-workflow/
 ├── test_video_processor.py       # 影片處理測試 ✅
 ├── test_content_generator.py     # 文案生成測試 ✅
 ├── test_uploader.py              # TikTok 上傳器測試 ✅
+├── test_main.py                  # 主控與排程測試 ✅
 ├── requirements.txt              # Python 依賴
 └── README.md
 
@@ -75,10 +76,10 @@ ganjing-tiktok-workflow/
 - [x] 自動發布邏輯
 - [x] 每日發布上限與 CAPTCHA 偵測暫停
 
-### Milestone 6: 排程與主控模組 ⏳ 待開發
-- [ ] 定時任務排程
-- [ ] 工作流程整合
-- [ ] 監控和告警
+### Milestone 6: 排程與主控模組 ✅ 完成
+- [x] 定時任務排程
+- [x] 工作流程整合
+- [x] 執行摘要與錯誤日誌
 
 ## 🚀 快速開始
 
@@ -111,6 +112,23 @@ python3 -m unittest -v test_content_generator.py
 ```bash
 python3 -m unittest -v test_uploader.py
 ```
+
+### 運行主控與排程測試
+```bash
+python3 -m unittest -v test_main.py
+```
+
+### 執行工作流程
+```bash
+python3 src/main.py --once
+```
+
+### 執行 dry run
+```bash
+python3 src/main.py --once --dry-run
+```
+
+不帶 `--once` 時，程式會依 `TIKTOK_UPLOAD['scheduled_times']` 定時執行。
 
 ## ⚙️ 配置
 
